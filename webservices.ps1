@@ -21,22 +21,18 @@ function Get-MultipartBody($boundary, $paths, $fields) {
     return $boundary + "`r`n" + $middle + $boundary + "--"
 }
 
-$product = 'Nexion Smart ERP'
-$version = '24.1.0.1'
-$user = $env:NEXION_USERNAME
-$pass = $env:NEXION_PASSWORD
-$files = @(".\NexionSmartERP-ApiService-AnyCPU-23.3.0.24")
 $fields = @{
-    product_name = $product_name
-    version = $version
+    product_name = 'Nexion Smart ERP'
+    version = '24.1.0.1'
 }
+$files = @(".\NexionSmartERP-ApiService-AnyCPU-23.3.0.24.exe")
 $boundary = [System.Guid]::NewGuid().ToString()
 $body = Get-MultipartBody $boundary $files $fields
 
 $endpoint = "https://www.nexion.com.ar"
 
 Write-Host "Login API"
-$login = @{identifier = $user; password = $pass }
+$login = @{identifier = $env:NEXION_USERNAME; password = $env:NEXION_PASSWORD }
 Invoke-WebRequest -Uri "$endpoint/login" -Method Post -Body $login -SessionVariable session
 
 Write-Host "Publish API"
