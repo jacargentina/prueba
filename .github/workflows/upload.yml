@@ -1,0 +1,27 @@
+name: upload
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    name: Upload
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '8.0.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+      - name: Ejecutar
+        shell: pwsh
+        env:
+          DISABLE_PROGRESS: 1
+          NEXION_USERNAME: ${{ secrets.NEXION_USERNAME }}
+          NEXION_PASSWORD: ${{ secrets.NEXION_PASSWORD }}
+        run: .\webservices.ps1
