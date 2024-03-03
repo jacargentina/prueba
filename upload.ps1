@@ -26,5 +26,5 @@ $boundary = [System.Guid]::NewGuid().ToString()
 $body = Get-MultipartBody $boundary $files $fields
 
 Write-Host "File.io Upload"
-$result = Invoke-WebRequest -Uri "https://file.io" -Method Post -Body $body -ContentType "multipart/form-data; boundary=$boundary" -TimeoutSec 300000 -MaximumRedirection 0
+$result = Invoke-RestMethod -Uri "https://file.io" -Method Post -Body $body -ContentType "multipart/form-data; boundary=$boundary" -TimeoutSec 300000 -MaximumRedirection 0
 Write-Host "File is at https://file.io/$($result.key)"
