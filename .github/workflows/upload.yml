@@ -20,8 +20,4 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
       - name: Ejecutar
         shell: pwsh
-        env:
-          DISABLE_PROGRESS: 1
-          NEXION_USERNAME: ${{ secrets.NEXION_USERNAME }}
-          NEXION_PASSWORD: ${{ secrets.NEXION_PASSWORD }}
-        run: .\webservices.ps1
+        run: .\upload.ps1

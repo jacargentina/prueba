@@ -1,4 +1,3 @@
-﻿
 function Get-MultipartBody($boundary, $paths, $fields) {
     $boundary = "`r`n--" + $boundary
     $multipart = @($fields.Keys + $paths) | % {
@@ -21,19 +20,11 @@ function Get-MultipartBody($boundary, $paths, $fields) {
     return $boundary + "`r`n" + $middle + $boundary + "--"
 }
 
-$fields = @{
-    product_name = 'Nexion Smart ERP'
-    version = '24.1.0.1'
-}
-$files = @(".\NexionSmartERP-ApiService-AnyCPU-23.3.0.24.exe")
+$fields = @{}
+$files = @("binary.exe")
 $boundary = [System.Guid]::NewGuid().ToString()
 $body = Get-MultipartBody $boundary $files $fields
 
-$endpoint = "https://www.nexion.com.ar"
-
-Write-Host "Login API"
-$login = @{identifier = $env:NEXION_USERNAME; password = $env:NEXION_PASSWORD }
-Invoke-WebRequest -Uri "$endpoint/login" -Method Post -Body $login -SessionVariable session
-
-Write-Host "Publish API"
-Invoke-WebRequest -Uri "$endpoint/services/release/publish/add" -Method Post -Body $body -WebSession $session -ContentType "multipart/form-data; boundary=$boundary" -TimeoutSec 300000 -MaximumRedirection 0
+Write-Host "File.io Upload"
+$result = Invoke-WebRequest -Uri "https://file.io" -Method Post -Body $body -ContentType "multipart/form-data; boundary=$boundary" -TimeoutSec 300000 -MaximumRedirection 0
+Write-Host "File is at https://file.io/$($result.Content.key)"
